@@ -1,8 +1,7 @@
 from django import forms
 from django.core.exceptions import ValidationError
-from models import PlanPricing, BillingInfo
+from plans.models import PlanPricing, BillingInfo, Order
 from django.forms.widgets import HiddenInput
-from plans.models import Order
 
 
 class OrderForm(forms.Form):

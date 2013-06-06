@@ -6,11 +6,11 @@ from django.conf import settings
 from datetime import date
 from datetime import timedelta
 import mock
-from plans.models import PlanPricing, Invoice, Order, Pricing, Plan
+from plans.models import PlanPricing, Invoice, Order, Plan
 from django.core import mail
 from django.db.models import Q
 from plans.plan_change import PlanChangePolicy, StandardPlanChangePolicy
-from plans.taxation import EUTaxationPolicy
+from plans.locale.eu.taxation import EUTaxationPolicy
 
 class PlansTestCase(TestCase):
 #    fixtures = ['test_user', 'test_plan.json']

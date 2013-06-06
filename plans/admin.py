@@ -1,10 +1,9 @@
 from copy import deepcopy
 from django.contrib import admin
 from django.core import urlresolvers
-from models import UserPlan, Plan, PlanQuota, Quota, PlanPricing, Pricing, Order, BillingInfo
+from plans.models import UserPlan, Plan, PlanQuota, Quota, PlanPricing, Pricing, Order, BillingInfo, Invoice
 from ordered_model.admin import OrderedModelAdmin
-from plans.models import Invoice
-from django.utils.translation import ugettext_lazy as _, pgettext_lazy
+from django.utils.translation import ugettext_lazy as _
 
 class UserLinkMixin(object):
     def user_link(self, obj):

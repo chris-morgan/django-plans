@@ -1,1 +1,1 @@
-from tests import *
+from plans.tests.tests import *

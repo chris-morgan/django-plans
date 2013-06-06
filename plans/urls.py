@@ -1,6 +1,5 @@
-from django.contrib.auth.decorators import login_required, permission_required
-from django.conf.urls.defaults import patterns, include, url
-from plans.models import Invoice
+from django.contrib.auth.decorators import login_required
+from django.conf.urls.defaults import patterns, url
 from plans.views import CreateOrderView, OrderListView, InvoiceDetailView, AccountActivationView, OrderPaymentReturnView, CurrentPlanView, UpgradePlanView, OrderView, BillingInfoRedirectView, BillingInfoCreateView, BillingInfoUpdateView, BillingInfoDeleteView, CreateOrderPlanChangeView,  ChangePlanView
 
 urlpatterns = patterns('',

@@ -1,6 +1,4 @@
-from datetime import date, datetime
 from django.core.urlresolvers import reverse
-from pytz import utc
 from plans.models import UserPlan
 
 def account_status(request):

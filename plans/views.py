@@ -1,4 +1,3 @@
-from decimal import Decimal
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
 from django.shortcuts import get_object_or_404
@@ -13,7 +12,7 @@ from django.views.generic.edit import DeleteView, ModelFormMixin
 from django.views.generic.list import ListView
 from plans.importer import import_name
 from plans.models import UserPlan, PlanPricing, Plan, Order, BillingInfo
-from plans.forms import CreateOrderForm, BillingInfoForm, BillingInfoWithoutShippingForm
+from plans.forms import CreateOrderForm, BillingInfoForm
 from plans.models import Quota, Invoice
 from plans.signals import order_started
 from plans.validators import account_full_validation

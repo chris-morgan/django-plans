@@ -1,4 +1,3 @@
-from django.conf import settings
 from plans.taxation import TaxationPolicy
 
 
