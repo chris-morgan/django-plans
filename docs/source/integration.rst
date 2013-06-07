@@ -11,7 +11,7 @@ Enable application in django
 
 Add this app to your ``INSTALED_APPS`` in django settings.py::
 
-    INSTALLED_APPS += ('plans', )
+    INSTALLED_APPS += ('plans',)
 
 You should also define all other settings marked as **required** described in detail in section :doc:`settings`.
 

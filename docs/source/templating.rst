@@ -3,7 +3,7 @@ Templates
 
 Account expiration warnings
 ---------------------------
-Via the ``plans.context_processors.account_status`` this module allows
+Via the :mod:`plans.context_processors.account_status` this module allows
 to get information in any template about:
 
  * user account has expired  - ``{{ ACCOUNT_EXPIRED }}``,
