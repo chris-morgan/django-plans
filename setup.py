@@ -5,6 +5,32 @@ from setuptools import find_packages, setup
 with open('README.rst') as file:
     long_description = file.read()
 
+extra_requires = {
+        'i18n' : [
+            'django-modeltranslation>=0.5b1',
+        ],
+        'eu': [
+            'vatnumber',
+            'suds==0.4.1-htj',
+        ],
+        'dev': [
+            # "dev" encompasses "docs"
+            'Sphinx',
+            'django-debug-toolbar',
+            'django-extensions',
+            'django-ordered-model',
+        ],
+        'test': [
+            'mock',
+            #'django_extensions',
+        ],
+    }
+
+# dev effectively depends on the others
+extra_requires['dev'] += extra_requires['i18n']
+extra_requires['dev'] += extra_requires['test']
+extra_requires['dev'] += extra_requires['eu']
+
 setup(
     name='django-plans',
     version='0.6',
@@ -29,15 +55,7 @@ setup(
         'django-countries',
         'pytz',
     ],
-    extras_require = {
-        'i18n' : [
-            'django-modeltranslation>=0.5b1',
-        ],
-        'eu': [
-            'vatnumber',
-            'suds==0.4.1-htj',
-        ],
-    },
+    extras_require=extra_requires,
     dependency_links=[
         'https://github.com/sbrandtb/django-ordered-model/downloads',
         'https://github.com/htj/suds-htj/downloads'

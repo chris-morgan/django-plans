@@ -10,6 +10,14 @@ You can install app using package manager directly from github:
 
     $ pip install -e git://github.com/cypreess/django-plans.git#egg=django-plans
 
+If you want the EU feature dependencies installed or i18n support, use this:
+
+.. code-block:: bash
+
+    $ pip install -e git://github.com/cypreess/django-plans.git#egg=django-plans\[eu,i18n]
+
+(The backslash in ``\[`` is to ensure it works in ``zsh``; other \*nix shells
+effectively ignore it.)
 
 For integration instruction please see section  :doc:`integration`.
 

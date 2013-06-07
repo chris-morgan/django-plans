@@ -17,6 +17,7 @@ Contents:
    templating
    south
    caveats
+   developers
 
 
 Indices and tables
