@@ -7,12 +7,13 @@ from django.contrib.auth.models import User
 
 logger = logging.getLogger('plans.tasks')
 
+
 @periodic_task(run_every=crontab(hour=0, minute=5))
 def expire_account():
 
     logger.info('Started')
 
-    for user in User.objects.select_related('userplan').filter(userplan__active=True,         userplan__expire__lt=datetime.date.today()).exclude(userplan__expire=None):
+    for user in User.objects.select_related('userplan').filter(userplan__active=True, userplan__expire__lt=datetime.date.today()).exclude(userplan__expire=None):
         user.userplan.expire_account()
 
     notifications_days_before = getattr(settings, 'PLAN_EXPIRATION_REMIND', [])

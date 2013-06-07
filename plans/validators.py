@@ -4,6 +4,7 @@ from plans.importer import import_name
 from plans.quota import get_user_quota
 from django.utils.translation import ugettext_lazy as _
 
+
 class QuotaValidator(object):
     """
     Base class for all Quota validators needed for account activation
@@ -13,6 +14,7 @@ class QuotaValidator(object):
     def get_quota(self, user):
         quotas = get_user_quota(user)
         return quotas.get(self.code, None)
+
 
 class ModelCountValidator(QuotaValidator):
     """
@@ -31,7 +33,7 @@ class ModelCountValidator(QuotaValidator):
     def get_error_message(self, quota):
         return _('Limit of %(model_name_plural)s exceeded. The limit is %(quota)s items.') % {
             'quota': quota,
-            'model_name_plural' : self.get_model()._meta.verbose_name_plural.title()
+            'model_name_plural': self.get_model()._meta.verbose_name_plural.title()
         }
 
     def __call__(self, user, add=0):
@@ -39,7 +41,6 @@ class ModelCountValidator(QuotaValidator):
         total_count = self.get_queryset(user).count() + add
         if not quota is None and total_count > quota:
             raise ValidationError(self.get_error_message(quota))
-
 
 
 def account_full_validation(user):
@@ -52,7 +53,7 @@ def account_full_validation(user):
     validators = getattr(settings, 'PLAN_ACTIVATION_VALIDATORS', {})
     errors = []
     for quota in quotas:
-        if validators.has_key(quota):
+        if quota in validators:
             validator = import_name(validators[quota])
             try:
                 validator(user)

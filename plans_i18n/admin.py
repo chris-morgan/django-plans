@@ -5,6 +5,7 @@ from plans.models import Plan, Quota, Pricing
 
 # Admin translation for django-plans
 
+
 class TranslatedPlanAdmin(PlanAdmin, TranslationAdmin):
     pass
 
@@ -24,4 +25,3 @@ class TranslatedQuotaAdmin(QuotaAdmin, TranslationAdmin):
 
 admin.site.unregister(Quota)
 admin.site.register(Quota, TranslatedQuotaAdmin)
-

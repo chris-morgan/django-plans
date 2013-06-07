@@ -22,7 +22,7 @@ Please note that adding those to ``INSTALLED_APPS`` **changes** django models. C
     class MyModel(models.Model):
         name = models.CharField(max_length=10)
 
-There will be generated fields: ``name`` , ``name_en``, ``name_pl``.
+There will be generated fields: ``name``, ``name_en``, ``name_pl``.
 
 You should migrate your database, using South is recommended::
 
@@ -31,10 +31,6 @@ You should migrate your database, using South is recommended::
 
 This app will also make all required adjustments in django admin.
 
-For more info on how translation works in details please refer to `django-modeltranslation docs<https://django-modeltranslation.readthedocs.org/en/latest/>`_.
-
-
-
-
-
-
+For more info on how translation works in details please refer to
+`django-modeltranslation docs
+<https://django-modeltranslation.readthedocs.org/en/latest/>`_.

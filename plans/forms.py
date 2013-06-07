@@ -5,7 +5,8 @@ from django.forms.widgets import HiddenInput
 
 
 class OrderForm(forms.Form):
-    plan_pricing = forms.ModelChoiceField(queryset=PlanPricing.objects.all(), widget=HiddenInput, required = True)
+    plan_pricing = forms.ModelChoiceField(queryset=PlanPricing.objects.all(), widget=HiddenInput, required=True)
+
 
 class CreateOrderForm(forms.ModelForm):
     """
@@ -22,7 +23,7 @@ class CreateOrderForm(forms.ModelForm):
 class BillingInfoForm(forms.ModelForm):
     class Meta:
         model = BillingInfo
-        exclude=('user',)
+        exclude = ('user',)
 
     def clean(self):
         cleaned_data = super(BillingInfoForm, self).clean()
@@ -33,6 +34,7 @@ class BillingInfoForm(forms.ModelForm):
             self._errors['tax_number'] = e.messages
 
         return cleaned_data
+
 
 class BillingInfoWithoutShippingForm(BillingInfoForm):
     class Meta:

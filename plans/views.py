@@ -17,11 +17,12 @@ from plans.models import Quota, Invoice
 from plans.signals import order_started
 from plans.validators import account_full_validation
 
+
 class AccountActivationView(TemplateView):
     template_name = 'plans/account_activation.html'
 
     def get_context_data(self, **kwargs):
-        if self.request.user.userplan.active == True or self.request.user.userplan.is_expired():
+        if self.request.user.userplan.active or self.request.user.userplan.is_expired():
             raise Http404()
 
         context = super(AccountActivationView, self).get_context_data(**kwargs)
@@ -38,15 +39,16 @@ class AccountActivationView(TemplateView):
 
         return context
 
+
 class PlanTableMixin(object):
     def get_plan_table(self, plan_list):
         """
         This method return a list in following order:
         [
-            ( Quota1, [ Plan1Quota1, Plan2Quota1, ... , PlanNQuota1] ),
-            ( Quota2, [ Plan1Quota2, Plan2Quota2, ... , PlanNQuota2] ),
-            ...
-            ( QuotaM, [ Plan1QuotaM, Plan2QuotaM, ... , PlanNQuotaM] ),
+            (Quota1, [Plan1Quota1, Plan2Quota1, ..., PlanNQuota1]),
+            (Quota2, [Plan1Quota2, Plan2Quota2, ..., PlanNQuota2]),
+            ...,
+            (QuotaM, [Plan1QuotaM, Plan2QuotaM, ..., PlanNQuotaM]),
         ]
 
         This can be very easily printed as an HTML table element with quotas by row.
@@ -69,10 +71,8 @@ class PlanTableMixin(object):
 
         # Generate data structure described in method docstring, propagate ``None`` whenever
         # ``PlanQuota`` is not available for given ``Plan`` and ``Quota``
-        return map(lambda quota: (quota,
-                            map(lambda plan: plan_quotas_dic[plan].get(quota, None), plan_list)
-
-            ), quota_list)
+        return [(quota, [plan_quotas_dic[plan].get(quota, None) for plan in plan_list])
+                for quota in quota_list]
 
 
 class UpgradePlanView(PlanTableMixin, ListView):
@@ -84,10 +84,9 @@ class UpgradePlanView(PlanTableMixin, ListView):
         queryset = super(UpgradePlanView, self).get_queryset().prefetch_related('planpricing_set__pricing', 'planquota_set__quota')
         if self.request.user.is_authenticated():
             queryset = queryset.filter(
-                            Q(available=True) & (
-                                Q(customized = self.request.user) | Q(customized__isnull=True)
-                                )
-                            )
+                Q(available=True) & (
+                    Q(customized=self.request.user) | Q(customized__isnull=True)
+                ))
         else:
             queryset = queryset.filter(Q(available=True) & Q(customized__isnull=True))
         return queryset
@@ -112,6 +111,7 @@ class UpgradePlanView(PlanTableMixin, ListView):
         context['CURRENCY'] = settings.CURRENCY
 
         return context
+
 
 class CurrentPlanView(UpgradePlanView):
     template_name = "plans/current.html"
@@ -140,7 +140,7 @@ class ChangePlanView(View):
         return HttpResponseRedirect(reverse('upgrade_plan'))
 
     def post(self, request, *args, **kwargs):
-        plan = get_object_or_404(Plan, Q(pk=kwargs['pk']) & Q(available=True) & ( Q(customized = request.user) | Q(customized__isnull=True)))
+        plan = get_object_or_404(Plan, Q(pk=kwargs['pk']) & Q(available=True) & (Q(customized=request.user) | Q(customized__isnull=True)))
         if request.user.userplan.plan != plan:
             policy = import_name(getattr(settings, 'PLAN_CHANGE_POLICY', 'plans.plan_change.StandardPlanChangePolicy'))()
 
@@ -179,14 +179,14 @@ class CreateOrderView(CreateView):
         tax = self.request.session.get(tax_session_key)
 
         if tax:
-            order.tax = tax[0] #retreiving tax as a tuple to avoid None problems
+            order.tax = tax[0]  # retreiving tax as a tuple to avoid None problems
         else:
-            taxation_policy = getattr(settings, 'TAXATION_POLICY' , None)
+            taxation_policy = getattr(settings, 'TAXATION_POLICY', None)
             if not taxation_policy:
                 raise ImproperlyConfigured('TAXATION_POLICY is not set')
             taxation_policy = import_name(taxation_policy)
             order.tax = taxation_policy.get_tax_rate(tax_number, country)
-            self.request.session[tax_session_key] = (order.tax, )
+            self.request.session[tax_session_key] = (order.tax,)
 
         return order
 
@@ -194,9 +194,9 @@ class CreateOrderView(CreateView):
         """
         Retrieves Plan and Pricing for current order creation
         """
-        self.plan_pricing = get_object_or_404(PlanPricing.objects.all().select_related('plan', 'pricing'),
-            Q(pk=self.kwargs['pk']) & Q(plan__available=True)  & ( Q(plan__customized = self.request.user) | Q(plan__customized__isnull=True)))
-
+        self.plan_pricing = get_object_or_404(
+            PlanPricing.objects.all().select_related('plan', 'pricing'),
+            Q(pk=self.kwargs['pk']) & Q(plan__available=True) & (Q(plan__customized=self.request.user) | Q(plan__customized__isnull=True)))
 
         # User is not allowed to create new order for Plan when he has different Plan
         # He should use Plan Change View for this kind of action
@@ -220,7 +220,6 @@ class CreateOrderView(CreateView):
 
     def get_price(self):
         return self.plan_pricing.price
-
 
     def get_context_data(self, **kwargs):
         context = super(CreateOrderView, self).get_context_data(**kwargs)
@@ -247,6 +246,11 @@ class CreateOrderView(CreateView):
         self.object.currency = order.currency
         self.object.save()
         order_started.send(sender=self.object)
+        # Using ModelFormMixin rather than CreateOrderView here is deliberate.
+        # ModelFormMixin.form_valid does ``self.object = form.save()``.
+        # Whether or not this is a good plan is another topic.
+        # XXX: form.save(commit=False) means we should probably follow it with
+        # ``form.save_m2m()`` for consistency with what ``form.save()`` does
         return super(ModelFormMixin, self).form_valid(form)
 
 
@@ -255,7 +259,7 @@ class CreateOrderPlanChangeView(CreateOrderView):
     form_class = CreateOrderForm
 
     def get_all_context(self):
-        self.plan = get_object_or_404(Plan, Q(pk=self.kwargs['pk']) & Q(available=True) & ( Q(customized = self.request.user) | Q(customized__isnull=True)))
+        self.plan = get_object_or_404(Plan, Q(pk=self.kwargs['pk']) & Q(available=True) & (Q(customized=self.request.user) | Q(customized__isnull=True)))
         self.pricing = None
 
     def get_policy(self):
@@ -293,7 +297,7 @@ class OrderView(DetailView):
 #        context = super(OrderView, self).get_context_data(**kwargs)
 #
 #        self.CURRENCY = getattr(settings, 'CURRENCY', None)
-#        if len( self.CURRENCY) != 3:
+#        if len(self.CURRENCY) != 3:
 #            raise ImproperlyConfigured('CURRENCY should be configured as 3-letter currency code.')
 #        context['CURRENCY'] = self.CURRENCY
 #
@@ -312,22 +316,24 @@ class OrderView(DetailView):
 #        return context
 
     def get_queryset(self):
-        return super(OrderView, self).get_queryset().filter(user=self.request.user).select_related('plan', 'pricing', )
+        return super(OrderView, self).get_queryset().filter(user=self.request.user).select_related('plan', 'pricing')
+
 
 class OrderListView(ListView):
     model = Order
     paginate_by = 10
+
     def get_context_data(self, **kwargs):
         context = super(OrderListView, self).get_context_data(**kwargs)
         self.CURRENCY = getattr(settings, 'CURRENCY', None)
-        if len( self.CURRENCY) != 3:
+        if len(self.CURRENCY) != 3:
             raise ImproperlyConfigured('CURRENCY should be configured as 3-letter currency code.')
         context['CURRENCY'] = self.CURRENCY
         return context
 
-
     def get_queryset(self):
-        return super(OrderListView, self).get_queryset().filter(user=self.request.user).select_related('plan', 'pricing', )
+        return super(OrderListView, self).get_queryset().filter(user=self.request.user).select_related('plan', 'pricing')
+
 
 class OrderPaymentReturnView(DetailView):
     """
@@ -345,7 +351,6 @@ class OrderPaymentReturnView(DetailView):
 
         return HttpResponseRedirect(self.object.get_absolute_url())
 
-
     def get_queryset(self):
         return super(OrderPaymentReturnView, self).get_queryset().filter(user=self.request.user)
 
@@ -355,13 +360,13 @@ class BillingInfoRedirectView(RedirectView):
     Checks if billing data for user exists and redirects to create or update view.
     """
     permanent = False
+
     def get_redirect_url(self, **kwargs):
         try:
             BillingInfo.objects.get(user=self.request.user)
         except BillingInfo.DoesNotExist:
             return reverse('billing_info_create')
         return reverse('billing_info_update')
-
 
 
 class BillingInfoCreateView(CreateView):
@@ -377,10 +382,10 @@ class BillingInfoCreateView(CreateView):
         self.object.save()
         return HttpResponseRedirect(self.get_success_url())
 
-    def get_success_url (self):
+    def get_success_url(self):
         messages.success(self.request, _('Billing info has been updated successfuly.'))
         return reverse('billing_info_update')
-    
+
 
 class BillingInfoUpdateView(UpdateView):
     """
@@ -395,24 +400,25 @@ class BillingInfoUpdateView(UpdateView):
             return self.request.user.billinginfo
         except BillingInfo.DoesNotExist:
             raise Http404
-    
-    def get_success_url (self):
+
+    def get_success_url(self):
         messages.success(self.request, _('Billing info has been updated successfuly.'))
         return reverse('billing_info_update')
+
 
 class BillingInfoDeleteView(DeleteView):
     """
     Deletes billing data for user
     """
     template_name = 'plans/billing_info_delete.html'
-    
+
     def get_object(self):
         try:
             return self.request.user.billinginfo
         except BillingInfo.DoesNotExist:
             raise Http404
-    
-    def get_success_url (self):
+
+    def get_success_url(self):
         messages.success(self.request, _('Billing info has been deleted.'))
         return reverse('billing_info_create')
 
@@ -422,7 +428,6 @@ class InvoiceDetailView(DetailView):
 
     def get_template_names(self):
         return getattr(settings, 'INVOICE_TEMPLATE', 'plans/invoices/PL_EN.html')
-
 
     def get_context_data(self, **kwargs):
         context = super(InvoiceDetailView, self).get_context_data(**kwargs)
@@ -435,4 +440,3 @@ class InvoiceDetailView(DetailView):
             return super(InvoiceDetailView, self).get_queryset()
         else:
             return super(InvoiceDetailView, self).get_queryset().filter(user=self.request.user)
-

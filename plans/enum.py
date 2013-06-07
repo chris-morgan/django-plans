@@ -42,6 +42,7 @@ class Enumeration(object):
 
     def __iter__(self):
         return self.enum_list.__iter__()
+
     def __repr__(self):
         return 'Enum(%s)' % self.enum_list_full.__repr__()
 

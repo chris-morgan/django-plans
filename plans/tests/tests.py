@@ -12,6 +12,7 @@ from django.db.models import Q
 from plans.plan_change import PlanChangePolicy, StandardPlanChangePolicy
 from plans.locale.eu.taxation import EUTaxationPolicy
 
+
 class PlansTestCase(TestCase):
 #    fixtures = ['test_user', 'test_plan.json']
     fixtures = ['initial_plan', 'test_django-plans_auth', 'test_django-plans_plans']
@@ -23,7 +24,8 @@ class PlansTestCase(TestCase):
         u.userplan.save()
         plan_pricing = PlanPricing.objects.get(plan=u.userplan.plan, pricing__period=30)
         u.userplan.extend_account(plan_pricing.plan, plan_pricing.pricing)
-        self.assertEqual(u.userplan.expire,
+        self.assertEqual(
+            u.userplan.expire,
             date.today() + timedelta(days=50) + timedelta(days=plan_pricing.pricing.period))
         self.assertEqual(u.userplan.plan, plan_pricing.plan)
         self.assertEqual(u.userplan.active, True)
@@ -110,7 +112,6 @@ class TestInvoice(TestCase):
         i.issued = date(2010, 5, 30)
         self.assertEqual(i.get_full_number(), "123/PF/05/2010")
 
-
     def test_get_full_number_with_settings(self):
         settings.INVOICE_NUMBER_FORMAT = "{{ invoice.issued|date:'Y' }}.{{ invoice.number }}.{{ invoice.issued|date:'m' }}"
         i = Invoice()
@@ -165,7 +166,6 @@ class TestInvoice(TestCase):
         self.assertEqual(i.number, 1)
         self.assertEqual(i.full_number, '1/FV/05/2010')
 
-
     def test_invoice_number_daily(self):
         settings.INVOICE_NUMBER_FORMAT = "{{ invoice.number }}/{% ifequal invoice.type invoice.INVOICE_TYPES.PROFORMA %}PF{% else %}FV{% endifequal %}/{{ invoice.issued|date:'d/m/Y' }}"
         settings.INVOICE_COUNTER_RESET = Invoice.NUMBERING.DAILY
@@ -209,7 +209,6 @@ class TestInvoice(TestCase):
         self.assertEqual(i1.full_number, "1/FV/03/05/2001")
         self.assertEqual(i2.full_number, "2/FV/03/05/2001")
         self.assertEqual(i3.full_number, "1/FV/04/05/2001")
-
 
     def test_invoice_number_monthly(self):
         settings.INVOICE_NUMBER_FORMAT = "{{ invoice.number }}/{% ifequal invoice.type invoice.INVOICE_TYPES.PROFORMA %}PF{% else %}FV{% endifequal %}/{{ invoice.issued|date:'m/Y' }}"
@@ -301,7 +300,6 @@ class TestInvoice(TestCase):
         self.assertEqual(i2.full_number, "2/FV/1991")
         self.assertEqual(i3.full_number, "1/FV/1992")
 
-
     def test_set_order(self):
         o = Order.objects.all()[0]
 
@@ -316,7 +314,6 @@ class TestInvoice(TestCase):
         self.assertEqual(i.tax, o.tax)
         self.assertEqual(i.tax_total, o.total() - o.amount)
         self.assertEqual(i.currency, o.currency)
-
 
 
 class OrderTestCase(TestCase):
@@ -375,7 +372,6 @@ class StandardPlanChangePolicyTestCase(TestCase):
     def setUp(self):
         self.policy = StandardPlanChangePolicy()
 
-
     def test_get_change_price(self):
         p1 = Plan.objects.get(pk=3)
         p2 = Plan.objects.get(pk=4)
@@ -384,6 +380,7 @@ class StandardPlanChangePolicyTestCase(TestCase):
 
 
 class EUTaxationPolicyTestCase(TestCase):
+
     def setUp(self):
         self.policy = EUTaxationPolicy()
 

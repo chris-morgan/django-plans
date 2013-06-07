@@ -9,6 +9,7 @@ from plans.signals import user_language
 
 email_logger = logging.getLogger('emails')
 
+
 def send_template_email(recipients, title_template, body_template, context, language):
     """Sends e-mail using templating system"""
 
@@ -21,7 +22,7 @@ def send_template_email(recipients, title_template, body_template, context, lang
         site_name = current_site.name
         domain = current_site.domain
 
-    context.update({'site_name' : site_name, 'site_domain': domain})
+    context.update({'site_name': site_name, 'site_domain': domain})
 
     if language is not None:
         translation.activate(language)

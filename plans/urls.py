@@ -1,10 +1,8 @@
 from django.contrib.auth.decorators import login_required
 from django.conf.urls.defaults import patterns, url
-from plans.views import CreateOrderView, OrderListView, InvoiceDetailView, AccountActivationView, OrderPaymentReturnView, CurrentPlanView, UpgradePlanView, OrderView, BillingInfoRedirectView, BillingInfoCreateView, BillingInfoUpdateView, BillingInfoDeleteView, CreateOrderPlanChangeView,  ChangePlanView
+from plans.views import CreateOrderView, OrderListView, InvoiceDetailView, AccountActivationView, OrderPaymentReturnView, CurrentPlanView, UpgradePlanView, OrderView, BillingInfoRedirectView, BillingInfoCreateView, BillingInfoUpdateView, BillingInfoDeleteView, CreateOrderPlanChangeView, ChangePlanView
 
 urlpatterns = patterns('',
-
-    
     url(r'^account/$', login_required(CurrentPlanView.as_view()), name='current_plan'),
     url(r'^account/activation/$', login_required(AccountActivationView.as_view()), name='account_activation'),
 
