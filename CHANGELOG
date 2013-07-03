@@ -1,6 +1,21 @@
 django-plans changelog
 ======================
 
+Version 0.X (unreleased)
+------------------------
+
+- Relocated taxation policy modules from ``plans.locale.*.taxation`` to modules
+  in the ``plans.taxation`` package:
+
+  - ``EUTaxationPolicy`` is now :class:`plans.taxation.eu.EUTaxationPolicy`
+
+  - ``RussianTaxationPolicy`` is now
+    :class:`plans.taxation.russia.RussianTaxationPolicy` (note that the module
+    name is ``russia``, not ``ru`` which was the former pattern)
+
+  This was to fix `#13: Taxation policies shouldn't be in plans.locale
+  <https://github.com/cypreess/django-plans/issues/13>`_.
+
 Version 0.4
 -----------
 

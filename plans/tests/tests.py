@@ -10,7 +10,7 @@ from plans.models import PlanPricing, Invoice, Order, Plan
 from django.core import mail
 from django.db.models import Q
 from plans.plan_change import PlanChangePolicy, StandardPlanChangePolicy
-from plans.locale.eu.taxation import EUTaxationPolicy
+from plans.taxation.eu import EUTaxationPolicy
 
 
 class PlansTestCase(TestCase):
