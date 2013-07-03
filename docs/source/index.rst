@@ -18,6 +18,7 @@ Contents:
    south
    caveats
    developers
+   changelog
 
 
 Indices and tables
