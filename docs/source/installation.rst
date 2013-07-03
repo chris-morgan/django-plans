@@ -33,7 +33,7 @@ Clone git repository to your current directory:
     $ git clone git://github.com/cypreess/django-plans.git
 
 
-Optionally create virtual env and get required packages to run example project:
+Optionally create virtual environment and get required packages to run example project:
 
 .. code-block:: bash
 
@@ -47,15 +47,15 @@ Initialize example project database:
 
     $ cd ..
     $ python manage.py syncdb
-
-Load an initial data (used also for testing):
-
-.. code-block:: bash
-
-    $ python manage.py loaddata test_django-plans_auth test_django-plans_plans
+    [...]
+    Would you like to create one now? (yes/no): no
+    [...]
 
 
-Start dev webserver:
+Initial example data will be loaded automatically.
+
+
+Start development web server:
 
 .. code-block:: bash
 

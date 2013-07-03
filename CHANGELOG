@@ -16,6 +16,14 @@ Version 0.X (unreleased)
   This was to fix `#13: Taxation policies shouldn't be in plans.locale
   <https://github.com/cypreess/django-plans/issues/13>`_.
 
+* Changing `QuotaValidator` API. `ModelCountValidator` requires now to give `add` argument only as a kwarg.
+
+
+Versions 0.5, v0.6
+------------------
+
+[...] (FIXME: history changelog from git commits
+
 Version 0.4
 -----------
 
