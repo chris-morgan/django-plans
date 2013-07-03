@@ -6,7 +6,7 @@ with open('README.rst') as file:
     long_description = file.read()
 
 extra_requires = {
-        'i18n' : [
+        'i18n': [
             'django-modeltranslation>=0.5b1',
         ],
         'eu': [

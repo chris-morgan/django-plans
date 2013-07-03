@@ -7,7 +7,7 @@ class FooForm(ModelForm):
     class Meta:
         model = Foo
         widgets = {
-            'user' : HiddenInput,
+            'user': HiddenInput,
         }
 
     def clean(self):

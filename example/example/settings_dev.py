@@ -4,15 +4,11 @@ MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-
 INTERNAL_IPS = ('127.0.0.1',)
 
-DEBUG_TOOLBAR_CONFIG ={
-    'INTERCEPT_REDIRECTS' : False,
+DEBUG_TOOLBAR_CONFIG = {
+    'INTERCEPT_REDIRECTS': False,
 }
-
-
-
 
 INSTALLED_APPS += (
     'debug_toolbar',
@@ -27,7 +23,7 @@ LOGGING = {
             'level': 'ERROR',
             'class': 'django.utils.log.AdminEmailHandler'
         },
-        'file_accounts' : {
+        'file_accounts': {
             'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': os.path.join(SITE_ROOT, 'accounts.log'),
