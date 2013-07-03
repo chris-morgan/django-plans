@@ -1,6 +1,17 @@
 Information for developers
 ==========================
 
+Source code
+-----------
+
+The source code for django-plans is `on GitHub`_. It is provided under the
+MIT license (see ``MIT-LICENSE.TXT`` for the full text of the license).
+
+Issues are tracked in the GitHub project's `issue tracker`_.
+
+.. _on GitHub: https://github.com/cypreess/django-plans
+.. _issue tracker: https://github.com/cypreess/django-plans/issues
+
 .. highlight:: bash
 
 If you're interested in helping out with django-plans, there are a few things
