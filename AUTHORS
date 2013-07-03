@@ -1,2 +1,7 @@
-The primary author of django-registration is Krzysztof Dorosz
-<cypreess@gmail.com>.
+django-plans was originally developed by, and is still primarily maintained by,
+Krzysztof Dorosz <cypreess@gmail.com>
+
+Other developers:
+
+- Victor Safronovich <vsafronovich@gmail.com>
+- Chris Morgan <me@chrismorgan.info>
